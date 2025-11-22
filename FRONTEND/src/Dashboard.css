@@ -1,0 +1,32 @@
+.dashboard-wrapper {
+  display: flex;
+  width: 95%;
+  margin: 40px auto;
+  justify-content: space-between;
+}
+
+.left-box {
+  width: 48%;
+  background: #fafafa;
+  padding: 25px;
+  border-radius: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+
+.right-box {
+  width: 48%;
+  text-align: center;
+  display: flex;
+  flex-direction: column; /* makes title + wellness stack */
+}
+
+.wellness-title {
+  font-size: 26px;
+  margin-bottom: 25px;
+  font-weight: bold;
+}
+
+.wellness-row {
+  width: 100%;
+  margin-top: 10px;  /* No flex here */
+}
