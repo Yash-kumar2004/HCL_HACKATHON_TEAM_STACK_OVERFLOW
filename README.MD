@@ -29,6 +29,9 @@ View booked appointments
 
 Mark appointment completed
 
+
+
+
 📅 Appointment Module
 
 Patient → Provider booking
@@ -38,6 +41,9 @@ Slot-based scheduling
 Store snapshot of patient + provider info
 
 Cancellable + Completable states
+
+
+
 
 🔐 Security
 
@@ -53,3 +59,4 @@ Secure DB (MongoDB Atlas TLS)
 
 
 ![alt text](<Screenshot 2025-11-22 160117.png>)
+
