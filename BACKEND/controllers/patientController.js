@@ -85,25 +85,37 @@ const getProfile = async (req, res) => {
 
 // API to update user profile
 const updateProfile = async (req, res) => {
-
     try {
+        const userId = req.userId;
 
-        const { userId, name, phone, address, dob, gender } = req.body
+        const {
+            name,
+            phone,
+            address,
+            dob,
+            gender,
+            sleep_goals,
+            walking_goals,
+            water_goals
+        } = req.body;
 
-        if (!name || !phone || !dob || !gender) {
-            return res.json({ success: false, message: "Data Missing" })
-        }
-       
+        await patientModel.findByIdAndUpdate(userId, {
+            name,
+            phone,
+            address,
+            dob,
+            gender,
+            sleep_goals,
+            walking_goals,
+            water_goals
+        });
 
-        await patientModel.findByIdAndUpdate(userId, { name, phone, address, dob, gender })
-
-        res.json({ success: true, message: 'Profile Updated' })
+        res.json({ success: true, message: 'Profile Updated' });
 
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.message });
     }
-}
+};
 
 // API to book appointment 
 const bookAppointment = async (req, res) => {
