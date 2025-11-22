@@ -56,4 +56,15 @@ return (
   
 }
 
-export default App
+          <Route path="/dashboard" element={<ProtectedRoute allowedRoles={["patient"]}><Dashboard /></ProtectedRoute>} />
+          <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+          <Route path="/providers" element={<ProtectedRoute><ProvidersList /></ProtectedRoute>} />
+          <Route path="/book/:id" element={<ProtectedRoute><BookAppointment /></ProtectedRoute>} />
+          <Route path="/appointments" element={<ProtectedRoute><MyAppointments /></ProtectedRoute>} />
+
+          <Route path="/provider/dashboard" element={<ProtectedRoute allowedRoles={["provider"]}><ProviderDashboard /></ProtectedRoute>} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
+  );
+}

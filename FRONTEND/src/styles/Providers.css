@@ -1,0 +1,30 @@
+.provider-container {
+  max-width: 1100px;
+  margin: 40px auto;
+}
+
+.provider-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 20px;
+}
+
+.provider-card {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #ddd;
+}
+
+.provider-card h3 {
+  font-size: 20px;
+}
+
+.degree {
+  color: #555;
+  margin-top: 5px;
+}
+
+.desc {
+  margin: 10px 0;
+}
