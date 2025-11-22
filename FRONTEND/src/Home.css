@@ -1,0 +1,14 @@
+.content-wrapper {
+  width: 100%;
+  margin: 30px auto;
+  margin-top: 120px; /* space below navbar */
+}
+
+.section-title {
+  margin-bottom: 25px;
+  font-size: 24px;
+  font-weight: bold;
+}
+.homepage-container{
+    width:100%;
+}
