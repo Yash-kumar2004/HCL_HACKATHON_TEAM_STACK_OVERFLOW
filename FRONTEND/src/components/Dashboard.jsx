@@ -12,8 +12,16 @@ const Dashboard = ({ isLoggedIn, onLogout }) => {
       <Navbar isLoggedIn={isLoggedIn} onLogout={onLogout} />
 
       <div className="dashboard-wrapper">
+
+      
+        <div className="right-box">
+          <h2 className="wellness-title">Wellness Goals</h2>
+          <div className="wellness-row">
+            <Wellness />
+          </div>
+        </div>
         
-        {/* LEFT MAIN BOX */}
+       
         <div className="left-box">
           <h2 className="left-title">Preventive Care Reminders</h2>
           <ul className="reminder-list">
@@ -24,13 +32,7 @@ const Dashboard = ({ isLoggedIn, onLogout }) => {
           <p className="tip-text">{healthTip}</p>
         </div>
 
-        {/* RIGHT WELLNESS SECTION */}
-        <div className="right-box">
-          <h2 className="wellness-title">Wellness Goals</h2>
-          <div className="wellness-row">
-            <Wellness />
-          </div>
-        </div>
+        
 
       </div>
     </>

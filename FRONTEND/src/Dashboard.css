@@ -1,5 +1,7 @@
 .dashboard-wrapper {
   display: flex;
+  flex-direction: column;
+  gap:10px;
   width: 95%;
   margin: 40px auto;
   justify-content: space-between;

@@ -33,7 +33,7 @@ export const AuthProvider = ({ children }) => {
         try {
             setLoading(true);
 
-            const res = await axios.post("/api/auth/register", userData);
+            const res = await axios.post("/api/user/register", userData);
 
             setLoading(false);
             return res.data.message; // Sent back to the Snackbar
@@ -48,7 +48,7 @@ export const AuthProvider = ({ children }) => {
         try {
             setLoading(true);
 
-            const res = await axios.post("/api/auth/login", { email, password });
+            const res = await axios.post("/api/user/login", { email, password });
 
             const { token, user } = res.data;
 
