@@ -1,30 +1,60 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import AuthProvider from "./context/AuthContext";
-import ProtectedRoute from "./components/ProtectedRoute";
-import Navbar from "./components/Navbar";
+import { createBrowserRouter,RouterProvider} from 'react-router-dom';
+import React from 'react';
+import Home from './components/Home.jsx';
+import Authentication from './components/Authentication.jsx';
+import Wellness from './components/Wellness.jsx';
+import Dashboard from "./components/Dashboard.jsx"
+import Profile from "./components/Profile.jsx"
+const router = createBrowserRouter([
+             {
+              path:"/",
+              element:<Home/>
+             },
+             {
+              path:"/auth",
+              element:<Authentication/>
+             },{
+              path:'/dashboard',
+              element:<Dashboard/>
+             },
+             {
+              path:'/profile',
+              element:<Profile/>
+             }/*,
+             {
+                 path:"/dashboard",
+                 element:<Dashboard/>
+             },
 
-import Home from "./pages/Home";
-import Privacy from "./pages/Privacy";
-import Login from "./pages/Login";
-import Register from "./pages/Register";
-import Dashboard from "./pages/Dashboard";
-import Profile from "./pages/Profile";
-import ProvidersList from "./pages/ProvidersList";
-import BookAppointment from "./pages/BookAppointment";
-import MyAppointments from "./pages/MyAppointments";
-import ProviderDashboard from "./pages/ProviderDashboard";
+             {
+              path:"/loginpage",
+              element:<Loginpage/>
+             },
+             {
+              path:"/register",
+              element:<Registrationpage/>
+             },
+             {
+              path:"/assigned",
+              element:<Assigned/>
+             },
+             {
+              path:"/searchpage",
+              element:<Searchpage/>
+             }*/
+            
+])
 
-export default function App() {
-  return (
-    <BrowserRouter>
-      <AuthProvider>
-        <Navbar />
-
-        <Routes>
-          <Route path="/" element={<Home />} />
-          <Route path="/privacy" element={<Privacy />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+function App() {
+  
+return (
+      <>
+      <RouterProvider router={router} />
+      
+      </>
+    )
+  
+}
 
           <Route path="/dashboard" element={<ProtectedRoute allowedRoles={["patient"]}><Dashboard /></ProtectedRoute>} />
           <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />

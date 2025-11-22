@@ -1,32 +1,44 @@
+import React from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
-import "../styles/Navbar.css";
+import "../Navbar.css";
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
 
-export default function Navbar() {
-  const { token, user, role, logout } = useAuth();
+const Navbar = () => {
+  const { isAuthenticated, logout } = useContext(AuthContext);
 
   return (
     <nav className="nav">
-      <div className="nav-left">Healthcare Portal</div>
+      
+      {/* LEFT SIDE = LOGO + LINKS */}
+      <div className="nav-left">
+        <div className="nav-logo">HLTH</div>
 
-      <div className="nav-links">
-        <Link to="/">Home</Link>
-        <Link to="/providers">Providers</Link>
+        <ul className="nav-links">
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/contact">Contact</Link></li>
 
-        {token ? (
-          <>
-            {role === "patient" && <Link to="/dashboard">Dashboard</Link>}
-            {role === "patient" && <Link to="/appointments">My Appointments</Link>}
-            <Link to="/profile">Profile</Link>
-            <a onClick={logout} className="logout">Logout</a>
-          </>
+          {/* Only show these if user is logged in */}
+          {isAuthenticated && (
+            <>
+              <li><Link to="/dashboard">Dashboard</Link></li>
+              <li><Link to="/profile">My Profile</Link></li>
+            </>
+          )}
+        </ul>
+      </div>
+
+      {/* RIGHT SIDE = AUTH BUTTON */}
+      <div className="nav-right">
+        {!isAuthenticated ? (
+          <Link to="/auth" className="signin-btn">Sign In</Link>
         ) : (
-          <>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
-          </>
+          <button className="logout-btn" onClick={logout}>Logout</button>
         )}
       </div>
+
     </nav>
   );
-}
+};
+
+export default Navbar;
