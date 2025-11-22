@@ -70,18 +70,18 @@ const loginUser = async (req, res) => {
 
 // API to get user profile data
 const getProfile = async (req, res) => {
-
     try {
-        const { userId } = req.body
-        const userData = await patientModel.findById(userId).select('-password')
+        const userId = req.userId;  // ✔ From middleware
+        const userData = await patientModel.findById(userId).select("-password");
 
-        res.json({ success: true, userData })
+        res.json({ success: true, userData });
 
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+        console.log(error);
+        res.json({ success: false, message: error.message });
     }
 }
+
 
 // API to update user profile
 const updateProfile = async (req, res) => {
@@ -107,35 +107,28 @@ const updateProfile = async (req, res) => {
 
 // API to book appointment 
 const bookAppointment = async (req, res) => {
-
     try {
-//userid from middlewares auth.js
-        const { userId, proid, slotDate, slotTime } = req.body
-        const pData = await providerModel.findById(proid).select("-password") 
-         //Uses providerModel to fetch the tutor document by its ID (proid) from the database.
-        let slots_booked = pData.slots_booked
-        // checking for slot availablity 
+        
+        const userId = req.userId;  // ✔ Correct
+        const { proid, slotDate, slotTime } = req.body;
 
-        if (slots_booked[slotDate]) {   // Checks if the date (slotDate) exists as a key in the slots_booked object.
-           // If it exists, it means there are already some booked slots for this date.
-        //    If the slotTime is already present in the array for the given slotDate, the slot is unavailable.
+        const pData = await providerModel.findById(proid).select("-password");
 
+        let slots_booked = pData.slots_booked || {};
+
+        if (slots_booked[slotDate]) {
             if (slots_booked[slotDate].includes(slotTime)) {
-                return res.json({ success: false, message: 'Slot Not Available' })
+                return res.json({ success: false, message: 'Slot Not Available' });
+            } else {
+                slots_booked[slotDate].push(slotTime);
             }
-            else {
-                slots_booked[slotDate].push(slotTime)   // kyonki slottime alag tha isliye push
-            }
-        } else {  //If the slotDate doesn’t exist in slots_booked, initializes it as an empty array ([]).
-           // Then adds the slotTime to this new array.
-            
-            slots_booked[slotDate] = []
-            slots_booked[slotDate].push(slotTime)
+        } else {
+            slots_booked[slotDate] = [slotTime];
         }
 
-        const userData = await patientModel.findById(userId).select("-password")
+        const userData = await patientModel.findById(userId).select("-password");
 
-        delete pData.slots_booked
+        delete pData.slots_booked;
 
         const appointmentData = {
             userId,
@@ -145,35 +138,33 @@ const bookAppointment = async (req, res) => {
             slotTime,
             slotDate,
             date: Date.now()
-        }
+        };
 
-        const newAppointment = new appointmentModel(appointmentData)   // SAVING THIS IN DATABASE
-        await newAppointment.save()
+        await new appointmentModel(appointmentData).save();
+        await providerModel.findByIdAndUpdate(proid, { slots_booked });
 
-        // save new slots data in pData
-        await providerModel.findByIdAndUpdate(proid, { slots_booked })
-
-        res.json({ success: true, message: 'Appointment Booked' })
+        res.json({ success: true, message: 'Appointment Booked' });
 
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+        console.log(error);
+        res.json({ success: false, message: error.message });
     }
+};
 
-}
-
-// API to get user's all appointments for frontend my-appointments page from database
+// API to get user's all appointments for frontend my-appointments 
 const listOfAppointments = async (req, res) => {
     try {
+        
+        const userId = req.userId;   // ✔ Get from middleware
 
-        const { userId } = req.body
-        const appointments = await appointmentModel.find({ userId })
+        const appointments = await appointmentModel.find({ userId });
 
-        res.json({ success: true, appointments })
+        res.json({ success: true, appointments });
 
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+        console.log(error);
+        res.json({ success: false, message: error.message });
     }
-}
+};
+
 export { registerUser, loginUser, getProfile, updateProfile, bookAppointment, listOfAppointments }
