@@ -5,133 +5,72 @@ import providerModel from "../models/providerModel.js";
 import appointmentModel from "../models/appointmentModel.js";
 import validator from "validator";
 
-
-// API to get all doctors list for Frontend
-const providerList = async (req, res) => {
-    try {
-
-        const providers = await providerModel.find({}).select(['-password', '-email'])
-        res.json({ success: true, providers })
-
-    } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
-    }
-
-}
-
-// API for provider Login 
-const loginProvider = async (req, res) => {
-
-    try {
-
-        const { email, password } = req.body
-        const provider = await providerModel.findOne({ email })
-
-        if (!provider) {
-            return res.json({ success: false, message: "Invalid credentials" })
-        }
-
-        const isMatch = await bcrypt.compare(password, provider.password)
-
-        if (isMatch) {
-  const token = jwt.sign({ id: provider._id }, process.env.JWT_SECRET)
-  res.json({ 
-    success: true, 
-    token, 
-    
-  })
-}
-        else {
-            res.json({ success: false, message: "Invalid credentials" })
-        }
-
-
-    } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
-    }
-}
-
-// API TO GET PROVIDER'S APPOINTMENTS 
+// API to get provider's appointments
 const appointmentsOfProvider = async (req, res) => {
     try {
-
-        const { proid } = req.body
-        const appointments = await appointmentModel.find({ proid })
-
-        res.json({ success: true, appointments })
-
+        const providerId = req.providerId;
+        const appointments = await appointmentModel.find({ proid: providerId });
+        res.json({ success: true, appointments });
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.message });
     }
-}
+};
 
-
-// API to mark appointment completed for provider panel
+// API to mark appointment completed
 const appointmentComplete = async (req, res) => {
     try {
+        const providerId = req.providerId;
+        const { appointmentId } = req.body;
 
-        const { proid, appointmentId } = req.body
+        const appointmentData = await appointmentModel.findById(appointmentId);
 
-        const appointmentData = await appointmentModel.findById(appointmentId)
-        if (appointmentData && appointmentData.proid === proid) {
-            await appointmentModel.findByIdAndUpdate(appointmentId, { isCompleted: true })
-            return res.json({ success: true, message: 'Appointment Completed' })
+        if (appointmentData && appointmentData.proid == providerId) {
+            await appointmentModel.findByIdAndUpdate(appointmentId, { isCompleted: true });
+            return res.json({ success: true, message: "Appointment Completed" });
         }
 
-        res.json({ success: false, message: 'Appointment Cancelled' })
+        res.json({ success: false, message: "Appointment Cancelled" });
 
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.message });
     }
+};
 
-}
-
-// API to get dashboard data for provider panel
+// API for provider dashboard
 const providerDashboard = async (req, res) => {
     try {
+        const providerId = req.providerId;
+        const appointments = await appointmentModel.find({ proid: providerId });
 
-        const { proid } = req.body
+        let users = [];
 
-        const appointments = await appointmentModel.find({ proid })
+        appointments.forEach(a => {
+            if (!users.includes(a.userId)) users.push(a.userId);
+        });
 
-        let users = []  // to get unique users
-
-        appointments.map((item) => {
-            if (!users.includes(item.userId)) {
-                users.push(item.userId)
+        res.json({
+            success: true,
+            dashData: {
+                appointments: appointments.length,
+                users: users.length,
+                latestAppointments: appointments.reverse().slice(0, 10)
             }
-        })
-        const dashData = {
-            appointments: appointments.length,
-            users: users.length,
-            latestAppointments: appointments.reverse().slice(0, 10)
-        }
-
-        res.json({ success: true, dashData })
+        });
 
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.message });
     }
-}
+};
 
-// API to get provider profile data
-
+// API to get provider profile
 const providerProfile = async (req, res) => {
     try {
-
-        const { proid } = req.body
-        const profileData = await providerModel.findById(proid).select('-password')
-
-        res.json({ success: true, profileData })
-
+        const providerId = req.providerId;
+        const profileData = await providerModel.findById(providerId).select("-password");
+        res.json({ success: true, profileData });
     } catch (error) {
-        console.log(error)
-        res.json({ success: false, message: error.message })
+        res.json({ success: false, message: error.message });
     }
-}
+};
+
 export { providerList, loginProvider, appointmentsOfProvider, appointmentComplete, providerDashboard, providerProfile };

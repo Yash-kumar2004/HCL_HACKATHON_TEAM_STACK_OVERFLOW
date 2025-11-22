@@ -29,7 +29,18 @@ const PatientSchema = new mongoose.Schema({
         type: String,
         default: 'Not Selected'
     },
-
+    sleep_goals:{
+        type: String,
+        default: ''
+    },
+    walking_goals:{
+        type: String,
+        default: ''
+    },
+    water_goals:{
+        type: String,
+        default: ''
+    }
 }, { minimize: false }
 )
 const patientModel = mongoose.models.Patient || mongoose.model("Patient", PatientSchema);
